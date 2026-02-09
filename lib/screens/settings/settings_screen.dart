@@ -158,7 +158,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final localeProv = context.watch<LocaleProvider>();
 
     return Container(
-      padding: const EdgeInsets.all(4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: isDark ? AppColors.darkCard : AppColors.lightCard,
         borderRadius: BorderRadius.circular(14),
@@ -166,51 +166,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
           color: isDark ? AppColors.darkCardBorder : AppColors.lightCardBorder,
         ),
       ),
-      child: Column(
-        children: AppTranslations.supportedLocales.map((localeInfo) {
-          final isSelected =
-              localeProv.locale.languageCode == localeInfo.locale.languageCode;
-
-          return GestureDetector(
-            onTap: () => localeProv.setLocale(localeInfo.locale),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? AppColors.primary.withValues(alpha: 0.1)
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(11),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: localeProv.locale.languageCode,
+          isExpanded: true,
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
               ),
-              child: Row(
-                children: [
-                  Text(
-                    localeInfo.flag,
-                    style: const TextStyle(fontSize: 22),
-                  ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Text(
-                      localeInfo.name,
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontWeight:
-                                isSelected ? FontWeight.w600 : FontWeight.w400,
-                            fontSize: 14,
-                          ),
-                    ),
-                  ),
-                  if (isSelected)
-                    const Icon(
-                      Icons.check_circle_rounded,
-                      color: AppColors.primary,
-                      size: 20,
-                    ),
-                ],
-              ),
-            ),
-          );
-        }).toList(),
+          items: AppTranslations.supportedLocales
+              .map(
+                (localeInfo) => DropdownMenuItem<String>(
+                  value: localeInfo.locale.languageCode,
+                  child: Text(localeInfo.name),
+                ),
+              )
+              .toList(),
+          onChanged: (languageCode) {
+            if (languageCode == null) return;
+            localeProv.setLocale(Locale(languageCode));
+          },
+        ),
       ),
     );
   }

@@ -4,10 +4,10 @@ class AppTranslations {
   AppTranslations._();
 
   static const List<LocaleInfo> supportedLocales = [
-    LocaleInfo(locale: Locale('en'), name: 'English', flag: '🇬🇧'),
-    LocaleInfo(locale: Locale('tr'), name: 'Türkçe', flag: '🇹🇷'),
-    LocaleInfo(locale: Locale('de'), name: 'Deutsch', flag: '🇩🇪'),
-    LocaleInfo(locale: Locale('es'), name: 'Español', flag: '🇪🇸'),
+    LocaleInfo(locale: Locale('en'), name: 'English'),
+    LocaleInfo(locale: Locale('tr'), name: 'Turkce'),
+    LocaleInfo(locale: Locale('de'), name: 'Deutsch'),
+    LocaleInfo(locale: Locale('es'), name: 'Espanol'),
   ];
 
   static const Map<String, Map<String, String>> _translations = {
@@ -371,11 +371,9 @@ class AppTranslations {
 class LocaleInfo {
   final Locale locale;
   final String name;
-  final String flag;
 
   const LocaleInfo({
     required this.locale,
     required this.name,
-    required this.flag,
   });
 }
