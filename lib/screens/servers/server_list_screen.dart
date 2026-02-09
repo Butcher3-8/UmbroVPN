@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/app_colors.dart';
-import '../../core/constants/app_strings.dart';
 import '../../providers/server_provider.dart';
+import '../../providers/locale_provider.dart';
 import 'widgets/server_tile.dart';
 
 class ServerListScreen extends StatelessWidget {
@@ -11,10 +11,11 @@ class ServerListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final tr = context.watch<LocaleProvider>().tr;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(AppStrings.servers),
+        title: Text(tr('servers')),
       ),
       body: Consumer<ServerProvider>(
         builder: (context, serverProv, _) {
@@ -31,7 +32,7 @@ class ServerListScreen extends StatelessWidget {
                   onChanged: serverProv.setSearchQuery,
                   style: Theme.of(context).textTheme.bodyLarge,
                   decoration: InputDecoration(
-                    hintText: AppStrings.searchServers,
+                    hintText: tr('searchServers'),
                     hintStyle: Theme.of(context).textTheme.bodyMedium,
                     prefixIcon: Icon(
                       Icons.search_rounded,
@@ -80,7 +81,7 @@ class ServerListScreen extends StatelessWidget {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
-                          'Selected fastest server: ${serverProv.fastestFreeServer.city}',
+                          '${tr('selectedFastest')} ${serverProv.fastestFreeServer.city}',
                         ),
                         behavior: SnackBarBehavior.floating,
                         shape: RoundedRectangleBorder(
@@ -99,14 +100,15 @@ class ServerListScreen extends StatelessWidget {
                       ),
                       borderRadius: BorderRadius.circular(14),
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.bolt_rounded, color: Colors.white, size: 20),
-                        SizedBox(width: 8),
+                        const Icon(Icons.bolt_rounded,
+                            color: Colors.white, size: 20),
+                        const SizedBox(width: 8),
                         Text(
-                          AppStrings.fastestServer,
-                          style: TextStyle(
+                          tr('fastestServer'),
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
                             fontSize: 14,

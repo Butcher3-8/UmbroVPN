@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
-import 'core/constants/app_strings.dart';
+import 'core/locale/app_translations.dart';
 import 'providers/theme_provider.dart';
+import 'providers/locale_provider.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/servers/server_list_screen.dart';
 import 'screens/premium/premium_screen.dart';
@@ -15,14 +16,18 @@ class UmbroVPNApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeProvider>(
-      builder: (context, themeProv, _) {
+    return Consumer2<ThemeProvider, LocaleProvider>(
+      builder: (context, themeProv, localeProv, _) {
         return MaterialApp(
-          title: AppStrings.appName,
+          title: 'UmbroVPN',
           debugShowCheckedModeBanner: false,
           themeMode: themeProv.themeMode,
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
+          locale: localeProv.locale,
+          supportedLocales: AppTranslations.supportedLocales
+              .map((l) => l.locale)
+              .toList(),
           home: const MainShell(),
         );
       },

@@ -5,6 +5,7 @@ import 'app.dart';
 import 'providers/theme_provider.dart';
 import 'providers/vpn_provider.dart';
 import 'providers/server_provider.dart';
+import 'providers/locale_provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +24,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => VpnProvider()),
         ChangeNotifierProvider(create: (_) => ServerProvider()),
+        ChangeNotifierProvider(create: (_) => LocaleProvider()),
       ],
       child: const UmbroVPNApp(),
     ),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/app_colors.dart';
-import '../../core/constants/app_strings.dart';
 import '../../models/connection_state.dart';
 import '../../providers/vpn_provider.dart';
 import '../../providers/server_provider.dart';
+import '../../providers/locale_provider.dart';
 import 'widgets/connect_button.dart';
 import 'widgets/connection_stats.dart';
 import 'widgets/selected_server_card.dart';
@@ -16,9 +16,11 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tr = context.watch<LocaleProvider>().tr;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(AppStrings.appName),
+        title: Text(tr('appName')),
         actions: [
           IconButton(
             onPressed: () {},
@@ -61,9 +63,9 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       const Spacer(flex: 1),
                       // Connection status text
-                      _buildStatusText(context, vpn.connectionState),
+                      _buildStatusText(context, vpn.connectionState, tr),
                       const SizedBox(height: 8),
-                      _buildStatusSubtitle(context, vpn.connectionState),
+                      _buildStatusSubtitle(context, vpn.connectionState, tr),
                       const Spacer(flex: 1),
                       // Connect button
                       ConnectButton(
@@ -79,6 +81,9 @@ class HomeScreen extends StatelessWidget {
                           duration: vpn.connectionDuration,
                           download: vpn.formatSpeed(vpn.downloadSpeed),
                           upload: vpn.formatSpeed(vpn.uploadSpeed),
+                          durationLabel: tr('duration'),
+                          downloadLabel: tr('download'),
+                          uploadLabel: tr('upload'),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -99,26 +104,27 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusText(BuildContext context, VpnConnectionState state) {
+  Widget _buildStatusText(
+      BuildContext context, VpnConnectionState state, String Function(String) tr) {
     String text;
     Color color;
 
     switch (state) {
       case VpnConnectionState.connected:
-        text = AppStrings.connected;
+        text = tr('connected');
         color = AppColors.connected;
         break;
       case VpnConnectionState.connecting:
-        text = AppStrings.connecting;
+        text = tr('connecting');
         color = AppColors.connecting;
         break;
       case VpnConnectionState.disconnecting:
-        text = 'Disconnecting...';
+        text = tr('disconnecting');
         color = AppColors.connecting;
         break;
       case VpnConnectionState.disconnected:
       case VpnConnectionState.error:
-        text = AppStrings.disconnected;
+        text = tr('disconnected');
         color = AppColors.disconnected;
         break;
     }
@@ -136,10 +142,11 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusSubtitle(BuildContext context, VpnConnectionState state) {
+  Widget _buildStatusSubtitle(
+      BuildContext context, VpnConnectionState state, String Function(String) tr) {
     final isConnected = state == VpnConnectionState.connected;
     return Text(
-      isConnected ? AppStrings.tapToDisconnect : AppStrings.tapToConnect,
+      isConnected ? tr('tapToDisconnect') : tr('tapToConnect'),
       style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14),
     );
   }

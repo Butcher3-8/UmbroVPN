@@ -5,12 +5,18 @@ class ConnectionStats extends StatelessWidget {
   final String duration;
   final String download;
   final String upload;
+  final String durationLabel;
+  final String downloadLabel;
+  final String uploadLabel;
 
   const ConnectionStats({
     super.key,
     required this.duration,
     required this.download,
     required this.upload,
+    required this.durationLabel,
+    required this.downloadLabel,
+    required this.uploadLabel,
   });
 
   @override
@@ -31,7 +37,7 @@ class ConnectionStats extends StatelessWidget {
         children: [
           _StatItem(
             icon: Icons.timer_outlined,
-            label: 'Duration',
+            label: durationLabel,
             value: duration,
           ),
           Container(
@@ -41,7 +47,7 @@ class ConnectionStats extends StatelessWidget {
           ),
           _StatItem(
             icon: Icons.arrow_downward_rounded,
-            label: 'Download',
+            label: downloadLabel,
             value: download,
             iconColor: AppColors.connected,
           ),
@@ -52,7 +58,7 @@ class ConnectionStats extends StatelessWidget {
           ),
           _StatItem(
             icon: Icons.arrow_upward_rounded,
-            label: 'Upload',
+            label: uploadLabel,
             value: upload,
             iconColor: AppColors.primary,
           ),

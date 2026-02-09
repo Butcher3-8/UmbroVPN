@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../core/theme/app_colors.dart';
-import '../core/constants/app_strings.dart';
+import '../providers/locale_provider.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -15,6 +16,7 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final tr = context.watch<LocaleProvider>().tr;
 
     return Container(
       decoration: BoxDecoration(
@@ -35,32 +37,32 @@ class BottomNavBar extends StatelessWidget {
             children: [
               _NavItem(
                 icon: Icons.home_rounded,
-                label: AppStrings.home,
+                label: tr('home'),
                 isSelected: currentIndex == 0,
                 onTap: () => onTap(0),
               ),
               _NavItem(
                 icon: Icons.dns_rounded,
-                label: AppStrings.servers,
+                label: tr('servers'),
                 isSelected: currentIndex == 1,
                 onTap: () => onTap(1),
               ),
               _NavItem(
                 icon: Icons.workspace_premium_rounded,
-                label: AppStrings.premium,
+                label: tr('premium'),
                 isSelected: currentIndex == 2,
                 onTap: () => onTap(2),
                 isPremium: true,
               ),
               _NavItem(
                 icon: Icons.person_rounded,
-                label: AppStrings.profile,
+                label: tr('profile'),
                 isSelected: currentIndex == 3,
                 onTap: () => onTap(3),
               ),
               _NavItem(
                 icon: Icons.settings_rounded,
-                label: AppStrings.settings,
+                label: tr('settings'),
                 isSelected: currentIndex == 4,
                 onTap: () => onTap(4),
               ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/app_colors.dart';
-import '../../core/constants/app_strings.dart';
 import '../../providers/vpn_provider.dart';
+import '../../providers/locale_provider.dart';
 
 class ProfileScreen extends StatelessWidget {
   final VoidCallback onPremiumTap;
@@ -12,10 +12,11 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final tr = context.watch<LocaleProvider>().tr;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(AppStrings.profile),
+        title: Text(tr('profile')),
       ),
       body: Consumer<VpnProvider>(
         builder: (context, vpn, _) {
@@ -43,7 +44,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  AppStrings.freeUser,
+                  tr('freeUser'),
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                         fontSize: 20,
                       ),
@@ -57,7 +58,7 @@ class ProfileScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    'Free Plan',
+                    tr('freePlan'),
                     style: TextStyle(
                       color: isDark
                           ? AppColors.darkTextSecondary
@@ -75,7 +76,7 @@ class ProfileScreen extends StatelessWidget {
                     Expanded(
                       child: _StatCard(
                         icon: Icons.access_time_rounded,
-                        label: AppStrings.totalUsage,
+                        label: tr('totalUsage'),
                         value: vpn.connectionDuration,
                         isDark: isDark,
                       ),
@@ -84,7 +85,7 @@ class ProfileScreen extends StatelessWidget {
                     Expanded(
                       child: _StatCard(
                         icon: Icons.data_usage_rounded,
-                        label: AppStrings.dataUsed,
+                        label: tr('dataUsed'),
                         value: vpn.formatData(
                             vpn.totalDownload + vpn.totalUpload),
                         isDark: isDark,
@@ -98,7 +99,7 @@ class ProfileScreen extends StatelessWidget {
                     Expanded(
                       child: _StatCard(
                         icon: Icons.repeat_rounded,
-                        label: AppStrings.sessionsCount,
+                        label: tr('sessionsCount'),
                         value: '${vpn.sessionCount}',
                         isDark: isDark,
                       ),
@@ -107,7 +108,7 @@ class ProfileScreen extends StatelessWidget {
                     Expanded(
                       child: _StatCard(
                         icon: Icons.arrow_downward_rounded,
-                        label: AppStrings.download,
+                        label: tr('download'),
                         value: vpn.formatData(vpn.totalDownload),
                         iconColor: AppColors.connected,
                         isDark: isDark,
@@ -154,16 +155,16 @@ class ProfileScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                AppStrings.upgradeToPremium,
-                                style: TextStyle(
+                              Text(
+                                tr('upgradeToPremium'),
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 16,
                                 ),
                               ),
                               Text(
-                                'Unlock all servers & features',
+                                tr('unlockAllServers'),
                                 style: TextStyle(
                                   color:
                                       Colors.white.withValues(alpha: 0.8),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../core/theme/app_colors.dart';
-import '../../core/constants/app_strings.dart';
+import '../../providers/locale_provider.dart';
 
 class PremiumScreen extends StatefulWidget {
   const PremiumScreen({super.key});
@@ -15,10 +16,11 @@ class _PremiumScreenState extends State<PremiumScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final tr = context.watch<LocaleProvider>().tr;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(AppStrings.goPremium),
+        title: Text(tr('goPremium')),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
@@ -47,40 +49,40 @@ class _PremiumScreenState extends State<PremiumScreen> {
             ),
             const SizedBox(height: 20),
             Text(
-              'Unlock Full Power',
+              tr('unlockFullPower'),
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     fontSize: 24,
                   ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Get access to all premium features',
+              tr('getAccessPremium'),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 32),
             // Features list
             _FeatureItem(
               icon: Icons.speed_rounded,
-              title: AppStrings.unlimitedSpeed,
-              subtitle: 'No bandwidth limits',
+              title: tr('unlimitedSpeed'),
+              subtitle: tr('noBandwidthLimits'),
               isDark: isDark,
             ),
             _FeatureItem(
               icon: Icons.public_rounded,
-              title: AppStrings.allServersAccess,
-              subtitle: 'Connect to 50+ countries',
+              title: tr('allServersAccess'),
+              subtitle: tr('connect50Countries'),
               isDark: isDark,
             ),
             _FeatureItem(
               icon: Icons.block_rounded,
-              title: AppStrings.noAds,
-              subtitle: 'Enjoy ad-free experience',
+              title: tr('noAds'),
+              subtitle: tr('adFreeExperience'),
               isDark: isDark,
             ),
             _FeatureItem(
               icon: Icons.headset_mic_rounded,
-              title: AppStrings.prioritySupport,
-              subtitle: '24/7 dedicated support',
+              title: tr('prioritySupport'),
+              subtitle: tr('dedicatedSupport'),
               isDark: isDark,
             ),
             const SizedBox(height: 28),
@@ -95,17 +97,17 @@ class _PremiumScreenState extends State<PremiumScreen> {
                 children: [
                   Expanded(
                     child: _PlanTab(
-                      label: AppStrings.monthly,
+                      label: tr('monthly'),
                       isSelected: !_isYearly,
                       onTap: () => setState(() => _isYearly = false),
                     ),
                   ),
                   Expanded(
                     child: _PlanTab(
-                      label: AppStrings.yearly,
+                      label: tr('yearly'),
                       isSelected: _isYearly,
                       onTap: () => setState(() => _isYearly = true),
-                      badge: AppStrings.bestValue,
+                      badge: tr('bestValue'),
                     ),
                   ),
                 ],
@@ -118,8 +120,8 @@ class _PremiumScreenState extends State<PremiumScreen> {
               child: _PriceCard(
                 key: ValueKey(_isYearly),
                 price: _isYearly ? '\$3.99' : '\$9.99',
-                period: _isYearly ? '/month billed yearly' : '/month',
-                totalPrice: _isYearly ? '\$47.88/year' : null,
+                period: _isYearly ? tr('billedYearly') : tr('perMonth'),
+                totalPrice: _isYearly ? '\$47.88/${tr('yearly').toLowerCase()}' : null,
                 isDark: isDark,
               ),
             ),
@@ -132,7 +134,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: const Text('Premium coming soon!'),
+                      content: Text(tr('premiumComingSoon')),
                       behavior: SnackBarBehavior.floating,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -148,9 +150,9 @@ class _PremiumScreenState extends State<PremiumScreen> {
                   ),
                   elevation: 0,
                 ),
-                child: const Text(
-                  AppStrings.subscribe,
-                  style: TextStyle(
+                child: Text(
+                  tr('subscribe'),
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -159,7 +161,7 @@ class _PremiumScreenState extends State<PremiumScreen> {
             ),
             const SizedBox(height: 12),
             Text(
-              'Cancel anytime. No questions asked.',
+              tr('cancelAnytime'),
               style:
                   Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 12),
             ),

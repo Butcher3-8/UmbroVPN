@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/theme/app_colors.dart';
-import '../../core/constants/app_strings.dart';
+import '../../core/locale/app_translations.dart';
 import '../../providers/theme_provider.dart';
+import '../../providers/locale_provider.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -19,26 +20,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final tr = context.watch<LocaleProvider>().tr;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(AppStrings.settings),
+        title: Text(tr('settings')),
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         children: [
           // Appearance section
-          _SectionHeader(title: AppStrings.appearance),
-          _buildThemeSelector(context, isDark),
+          _SectionHeader(title: tr('appearance')),
+          _buildThemeSelector(context, isDark, tr),
+          const SizedBox(height: 16),
+
+          // Language section
+          _SectionHeader(title: tr('language')),
+          _buildLanguageSelector(context, isDark),
           const SizedBox(height: 16),
 
           // Connection section
-          _SectionHeader(title: AppStrings.connection),
+          _SectionHeader(title: tr('connection')),
           _buildSettingCard(
             context: context,
             isDark: isDark,
             children: [
-              _buildProtocolTile(context, isDark),
+              _buildProtocolTile(context, isDark, tr),
               Divider(
                 height: 1,
                 color:
@@ -47,8 +54,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildSwitchTile(
                 context: context,
                 icon: Icons.shield_outlined,
-                title: AppStrings.killSwitch,
-                subtitle: AppStrings.killSwitchDesc,
+                title: tr('killSwitch'),
+                subtitle: tr('killSwitchDesc'),
                 value: _killSwitch,
                 onChanged: (v) => setState(() => _killSwitch = v),
               ),
@@ -60,8 +67,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildSwitchTile(
                 context: context,
                 icon: Icons.play_circle_outline_rounded,
-                title: AppStrings.autoConnect,
-                subtitle: AppStrings.autoConnectDesc,
+                title: tr('autoConnect'),
+                subtitle: tr('autoConnectDesc'),
                 value: _autoConnect,
                 onChanged: (v) => setState(() => _autoConnect = v),
               ),
@@ -70,7 +77,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const SizedBox(height: 16),
 
           // About section
-          _SectionHeader(title: AppStrings.about),
+          _SectionHeader(title: tr('about')),
           _buildSettingCard(
             context: context,
             isDark: isDark,
@@ -78,8 +85,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildInfoTile(
                 context: context,
                 icon: Icons.info_outline_rounded,
-                title: AppStrings.appName,
-                trailing: AppStrings.version,
+                title: tr('appName'),
+                trailing: tr('version'),
               ),
               Divider(
                 height: 1,
@@ -89,7 +96,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildInfoTile(
                 context: context,
                 icon: Icons.description_outlined,
-                title: 'Terms of Service',
+                title: tr('termsOfService'),
               ),
               Divider(
                 height: 1,
@@ -99,7 +106,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               _buildInfoTile(
                 context: context,
                 icon: Icons.privacy_tip_outlined,
-                title: 'Privacy Policy',
+                title: tr('privacyPolicy'),
               ),
             ],
           ),
@@ -109,7 +116,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildThemeSelector(BuildContext context, bool isDark) {
+  Widget _buildThemeSelector(
+      BuildContext context, bool isDark, String Function(String) tr) {
     final themeProv = context.watch<ThemeProvider>();
 
     return Container(
@@ -125,23 +133,84 @@ class _SettingsScreenState extends State<SettingsScreen> {
         children: [
           _ThemeOption(
             icon: Icons.dark_mode_rounded,
-            label: AppStrings.darkMode,
+            label: tr('darkMode'),
             isSelected: themeProv.isDarkMode,
             onTap: () => themeProv.setThemeMode(ThemeMode.dark),
           ),
           _ThemeOption(
             icon: Icons.light_mode_rounded,
-            label: AppStrings.lightMode,
+            label: tr('lightMode'),
             isSelected: themeProv.isLightMode,
             onTap: () => themeProv.setThemeMode(ThemeMode.light),
           ),
           _ThemeOption(
             icon: Icons.settings_suggest_rounded,
-            label: AppStrings.systemMode,
+            label: tr('systemMode'),
             isSelected: themeProv.isSystemMode,
             onTap: () => themeProv.setThemeMode(ThemeMode.system),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildLanguageSelector(BuildContext context, bool isDark) {
+    final localeProv = context.watch<LocaleProvider>();
+
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkCard : AppColors.lightCard,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: isDark ? AppColors.darkCardBorder : AppColors.lightCardBorder,
+        ),
+      ),
+      child: Column(
+        children: AppTranslations.supportedLocales.map((localeInfo) {
+          final isSelected =
+              localeProv.locale.languageCode == localeInfo.locale.languageCode;
+
+          return GestureDetector(
+            onTap: () => localeProv.setLocale(localeInfo.locale),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? AppColors.primary.withValues(alpha: 0.1)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(11),
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    localeInfo.flag,
+                    style: const TextStyle(fontSize: 22),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Text(
+                      localeInfo.name,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            fontWeight:
+                                isSelected ? FontWeight.w600 : FontWeight.w400,
+                            fontSize: 14,
+                          ),
+                    ),
+                  ),
+                  if (isSelected)
+                    const Icon(
+                      Icons.check_circle_rounded,
+                      color: AppColors.primary,
+                      size: 20,
+                    ),
+                ],
+              ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }
@@ -163,7 +232,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildProtocolTile(BuildContext context, bool isDark) {
+  Widget _buildProtocolTile(
+      BuildContext context, bool isDark, String Function(String) tr) {
     return ListTile(
       leading: Container(
         width: 38,
@@ -176,7 +246,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             color: AppColors.primary, size: 20),
       ),
       title: Text(
-        AppStrings.protocol,
+        tr('protocol'),
         style: Theme.of(context)
             .textTheme
             .bodyLarge
